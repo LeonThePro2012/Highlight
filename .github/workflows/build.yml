@@ -5,18 +5,29 @@ on:
 jobs:
   build-windows:
     runs-on: windows-latest
+    env:
+      FFMPEG_SYS_NEXT_DEBUG: "1"
+      RUST_BACKTRACE: "1"
     steps:
       - name: 拉取源码
         uses: actions/checkout@v4
 
-      # 【新增：提前清理vendor目录，防止它走本地链接分支】
+      # ✅ 优先安装 MSYS2，补齐 sh、nasm、make（ffmpeg configure 必须）
+      - name: Setup MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          install: >-
+            nasm
+            make
+
+      # 清理vendor/ffmpeg
       - name: 清理vendor/ffmpeg
         run: |
           if (Test-Path vendor/ffmpeg) {
             Remove-Item -Recurse -Force vendor/ffmpeg
           }
 
-      # 【关键！提前预编译Rust依赖，ffmpeg在这里就开始构建，早失败】
       - name: 安装Rust
         uses: dtolnay/rust-toolchain@stable
 
@@ -27,7 +38,6 @@ jobs:
         working-directory: ./app
         run: cargo check
 
-      # 上面cargo check成功，才往下走前端、打包
       - name: 安装 Node.js
         uses: actions/setup-node@v4
         with:
@@ -35,11 +45,11 @@ jobs:
           cache: npm
 
       - name: 进入app目录，安装前端依赖
-        working-directory: /app
+        working-directory: ./app
         run: npm ci
 
       - name: Tauri打包
-        working-directory: /app
+        working-directory: ./app
         run: npm run tauri build -- --no-sign
 
       - name: 上传打包产物
