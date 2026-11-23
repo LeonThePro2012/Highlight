@@ -9,8 +9,8 @@ jobs:
       - name: 拉取源码
         uses: actions/checkout@v4
 
-      - name: 安装 NASM（ffmpeg编译/链接必须）
-        run: choco install nasm -y
+      - name: 安装 NASM + YASM（编译FFmpeg源码必须）
+        run: choco install nasm yasm -y
 
       - name: 安装 Node.js
         uses: actions/setup-node@v4
@@ -27,11 +27,11 @@ jobs:
         working-directory: ./app
         run: npm ci
 
-      - name: Tauri打包
+      - name: Tauri打包（开启ffmpeg源码编译）
         working-directory: ./app
         env:
-          # 关键：告诉ffmpeg-sys-next去哪里找vendor里的ffmpeg
-          FFMPEG_VENDOR_PATH: ${{ github.workspace }}/vendor/ffmpeg
+          # 不使用vendor，让ffmpeg-sys-next自己编译ffmpeg
+          FFMPEG_BUILD: true
         run: npm run tauri build -- --no-sign
 
       - name: 上传打包产物
