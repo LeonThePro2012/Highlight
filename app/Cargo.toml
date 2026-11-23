@@ -1,9 +1,9 @@
 [package]
-name = "hindsight"
+name = "highlight"
 version.workspace = true
 edition.workspace = true
 license-file.workspace = true
-description = "Hindsight — instant replay clipping"
+description = "Highlight — instant replay clipping"
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
@@ -21,8 +21,8 @@ reqwest = { version = "0.13", features = ["json"] }
 chrono = { version = "0.4", default-features = false, features = ["clock"] }
 trash = "5"
 winreg = "0.55"
-hindsight-recorder = { path = "../crates/recorder" }
-hindsight-encode = { path = "../crates/encode" }
+highlight-recorder = { path = "../crates/recorder" }
+highlight-encode = { path = "../crates/encode" }
 windows = { workspace = true, features = [
     "Win32_Foundation",
     "Win32_Security",
