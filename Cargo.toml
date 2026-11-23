@@ -19,3 +19,7 @@ ffmpeg-sys-next = { version = "8.1", default-features = false, features = ["avco
 lto = "thin"
 codegen-units = 1
 debug = 1
+
+# ========== 下面新增的patch ==========
+[patch.crates-io]
+ffmpeg-sys-next = { git = "https://github.com/你的用户名/ffmpeg-sys-next.git" }
