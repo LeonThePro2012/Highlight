@@ -1,0 +1,43 @@
+name: Cross打包Windows
+on:
+  workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-windows:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 cross
+        uses: taiki-e/install-action@cross
+
+      - name: 缓存编译
+        uses: actions/cache@v4
+        with:
+          path: ~/.target
+          key: cross-${{ hashFiles('Cargo.toml','Cargo.lock') }}
+
+      - name: 安装 Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: 前端依赖
+        working-directory: ./app
+        run: npm ci
+
+      - name: cross编译release
+        working-directory: ./app
+        run: cross build --target x86_64-pc-windows-gnu --release
+
+      - name: 上传产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: Highlight-Win-GNU
+          path: app/src-tauri/target/x86_64-pc-windows-gnu/release/bundle/**
