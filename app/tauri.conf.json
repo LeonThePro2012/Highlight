@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Hindsight",
+  "productName": "Highlight",
   "version": "1.2.0",
-  "identifier": "app.hindsight.clips",
+  "identifier": "app.Highlight.clips",
   "build": {
     "frontendDist": "../ui"
   },
@@ -22,9 +22,9 @@
     "targets": [
       "nsis"
     ],
-    "publisher": "Hindsight",
+    "publisher": "Highlight",
     "shortDescription": "Instant replay clipping for Windows",
-    "longDescription": "Hindsight keeps the last minutes of your screen on the GPU. Press a key and they are saved as an MP4. No account, no uploads.",
+    "longDescription": "Highlight keeps the last minutes of your screen on the GPU. Press a key and they are saved as an MP4. No account, no uploads.",
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
@@ -52,14 +52,14 @@
     },
     "copyright": "© 2026 TheOriUHD",
     "category": "Video",
-    "homepage": "https://hindsighthq.app",
+    "homepage": "https://Highlighthq.app",
     "createUpdaterArtifacts": true
   },
   "plugins": {
     "updater": {
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDU0QkE0NkM3NDVBNDU4OUQKUldTZFdLUkZ4MGE2VlBVYzlJY2oxSU9mY2Z0eG5lQjQweHhiU0M5NklHUHZsbHhwMS9FaFJpQ2kK",
       "endpoints": [
-        "https://api.hindsighthq.app/update/latest.json"
+        "https://api.Highlighthq.app/update/latest.json"
       ],
       "windows": {
         "installMode": "passive"
