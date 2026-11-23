@@ -1,3 +1,5 @@
+Thaks to hinlight!!!!!!   I just had AI to translate UI from English to Chinese.
+
 <div align="center">
 
 <img src="app/icons/128x128@2x.png" alt="Hindsight" width="96" height="96">
