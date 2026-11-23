@@ -1,5 +1,5 @@
 [package]
-name = "hindsight-capture"
+name = "highlight-capture"
 version.workspace = true
 edition.workspace = true
 license-file.workspace = true
