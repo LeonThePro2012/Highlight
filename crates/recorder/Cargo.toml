@@ -1,5 +1,5 @@
 [package]
-name = "hindsight-recorder"
+name = "highlight-recorder"
 version.workspace = true
 edition.workspace = true
 license-file.workspace = true
@@ -13,8 +13,8 @@ dirs = "6"
 windows-numerics = "0.2"
 windows-core.workspace = true
 chrono = { version = "0.4", default-features = false, features = ["clock"] }
-hindsight-capture = { path = "../capture" }
-hindsight-encode = { path = "../encode" }
+highlight-capture = { path = "../capture" }
+highlight-encode = { path = "../encode" }
 windows = { workspace = true, features = [
     "Win32_Graphics_Direct2D",
     "Win32_Graphics_Direct2D_Common",
