@@ -9,12 +9,6 @@ jobs:
       - name: 拉取源码
         uses: actions/checkout@v4
 
-      - name: 安装 vcpkg
-        uses: lukka/run-vcpkg@v11
-        with:
-          packages: ffmpeg
-          triplet: x64-windows
-
       - name: 安装 Node.js
         uses: actions/setup-node@v4
         with:
@@ -32,8 +26,6 @@ jobs:
 
       - name: Tauri打包
         working-directory: ./app
-        env:
-          VCPKG_ROOT: ${{ github.workspace }}/vcpkg
         run: npm run tauri build -- --no-sign
 
       - name: 上传打包产物
