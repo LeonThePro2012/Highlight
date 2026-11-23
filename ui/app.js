@@ -29,8 +29,8 @@ function dayLabel(unix) {
   const d = new Date(unix * 1000);
   const today = new Date();
   const yesterday = new Date(Date.now() - 864e5);
-  if (d.toDateString() === today.toDateString()) return "Today";
-  if (d.toDateString() === yesterday.toDateString()) return "Yesterday";
+  if (d.toDateString() === today.toDateString()) return "今天";
+  if (d.toDateString() === yesterday.toDateString()) return "昨天";
   const sameYear = d.getFullYear() === today.getFullYear();
   return d.toLocaleDateString([], { weekday: "long", month: "long", day: "numeric", ...(sameYear ? {} : { year: "numeric" }) });
 }
@@ -93,8 +93,8 @@ async function refreshStatus() {
     status = await invoke("get_status");
   } catch {
     rec.className = "rec err";
-    $("#rec-state").textContent = "Recorder not running";
-    setMeta([["", "Start Hindsight from the Start menu"]]);
+    $("#rec-state").textContent = "录制器未运行";
+    setMeta([["", "从开始菜单启动 Hindsight"]]);
     $("#save-clip").disabled = true;
     $("#toggle-rec").disabled = true;
     return;
@@ -107,27 +107,27 @@ async function refreshStatus() {
   if (settings) settings.enabled = status.enabled;
 
   $("#toggle-rec").disabled = false;
-  $("#toggle-rec").textContent = status.enabled ? "Pause recording" : "Resume recording";
+  $("#toggle-rec").textContent = status.enabled ? "暂停录制" : "继续录制";
   $("#save-clip").disabled = !status.recording;
   rec.className = "rec" + (status.recording ? " on" : "") + (status.error ? " err" : "");
   if (status.error) {
-    $("#rec-state").textContent = "Not recording";
+    $("#rec-state").textContent = "未录制";
     setMeta([]);
     $("#rec-meta").append(el("p", "rec-msg", status.error));
   } else if (!status.enabled) {
-    $("#rec-state").textContent = "Paused";
+    $("#rec-state").textContent = "已暂停";
     setMeta([]);
-    $("#rec-meta").append(el("p", "rec-msg", "The hotkey does nothing until you resume."));
+    $("#rec-meta").append(el("p", "rec-msg", "恢复录制后快捷键才会生效。"));
   } else if (!status.recording) {
-    $("#rec-state").textContent = "Starting";
+    $("#rec-state").textContent = "启动中";
     setMeta([]);
   } else {
-    $("#rec-state").textContent = "Recording";
+    $("#rec-state").textContent = "录制中";
     setMeta([
-      ["Video", `${status.height}p · ${status.fps} fps`],
-      ["Encoder", codecName(status.encoder)],
-      ["Audio", status.audio_tracks.length ? status.audio_tracks.join(", ") : "Off"],
-      ["Buffer", `${Math.floor(status.buffered_secs)} s · ${Math.round(status.buffer_mb)} MB`],
+      ["视频", `${status.height}p · ${status.fps} fps`],
+      ["编码器", codecName(status.encoder)],
+      ["音频", status.audio_tracks.length ? status.audio_tracks.join(", ") : "关闭"],
+      ["缓存", `${Math.floor(status.buffered_secs)} s · ${Math.round(status.buffer_mb)} MB`],
     ]);
   }
 }
@@ -139,7 +139,7 @@ $("#save-clip").addEventListener("click", async () => {
   try {
     await invoke("save_clip");
   } catch (e) {
-    toast(`Couldn't save clip: ${e}`, { error: true });
+    toast(`保存片段失败：${e}`, { error: true });
   }
   b.disabled = false;
 });
@@ -158,7 +158,7 @@ async function loadClips(highlight) {
   try {
     clips = await invoke("list_clips");
   } catch (e) {
-    toast(`Couldn't read the clips folder: ${e}`, { error: true });
+    toast(`读取片段文件夹失败：${e}`, { error: true });
     clips = [];
   }
   renderClips(highlight);
@@ -176,7 +176,7 @@ function renderGames() {
   if (liked) rows.unshift([FAVOURITES, liked]);
   for (const [game, n] of rows) {
     const b = el("button", "game" + (gameFilter === game ? " active" : ""));
-    const name = game === FAVOURITES ? "Favourites" : game;
+    const name = game === FAVOURITES ? "收藏" : game;
     b.append(el("span", null, name), el("span", "count", n));
     b.title = name;
     b.onclick = () => {
@@ -193,9 +193,9 @@ function renderClips(highlight) {
   const faves = gameFilter === FAVOURITES;
   const shown = clips.filter((c) => !gameFilter || (faves ? c.favorite : c.game === gameFilter));
   $("#nav-count").textContent = clips.length || "";
-  $("#clips-title").textContent = faves ? "Favourites" : gameFilter || "All clips";
+  $("#clips-title").textContent = faves ? "收藏" : gameFilter || "全部片段";
   const total = shown.reduce((a, c) => a + c.size, 0);
-  $("#clip-count").textContent = shown.length ? `${shown.length} clip${shown.length === 1 ? "" : "s"} · ${fmtSize(total)}` : "";
+  $("#clip-count").textContent = shown.length ? `${shown.length} 个片段 · ${fmtSize(total)}` : "";
   $("#empty").hidden = clips.length > 0;
 
   const days = $("#days");
@@ -226,14 +226,14 @@ function card(c, isNew) {
   if (c.thumb) img.src = convertFileSrc(c.thumb);
   else img.style.visibility = "hidden";
   const fav = el("button", "fav" + (c.favorite ? " on" : ""));
-  fav.title = c.favorite ? "Remove from favourites" : "Add to favourites";
+  fav.title = c.favorite ? "取消收藏" : "加入收藏";
   fav.innerHTML = icon("star");
   fav.onclick = (e) => {
     e.stopPropagation();
     toggleFavorite(c);
   };
   const copy = el("button", "copy");
-  copy.title = "Copy to clipboard";
+  copy.title = "复制到剪贴板";
   copy.innerHTML = icon("copy");
   copy.onclick = (e) => {
     e.stopPropagation();
@@ -286,7 +286,7 @@ async function toggleFavorite(c) {
   try {
     await invoke("set_favorite", { path: c.path, on });
   } catch (e) {
-    return toast(`Couldn't save that: ${e}`, { error: true });
+    return toast(`操作失败：${e}`, { error: true });
   }
   c.favorite = on;
   const listed = clips.find((x) => x.path === c.path);
@@ -298,9 +298,9 @@ async function toggleFavorite(c) {
 /* Join: pick clips in the order they should play. */
 let picking = null;
 function drawJoin() {
-  $("#join").textContent = picking ? "Cancel" : "Join clips";
+  $("#join").textContent = picking ? "取消" : "合并片段";
   $("#join-go").hidden = !picking || picking.length < 2;
-  if (picking) $("#join-go").textContent = `Join ${picking.length} clips`;
+  if (picking) $("#join-go").textContent = `合并 ${picking.length} 个片段`;
 }
 function stopPicking() {
   picking = null;
@@ -318,12 +318,12 @@ $("#join").onclick = () => {
   if (picking) return stopPicking();
   picking = [];
   drawJoin();
-  toast("Click clips in the order they should play");
+  toast("按播放顺序点击片段");
 };
 $("#join-go").onclick = () => {
   const paths = picking;
   stopPicking();
-  runJob("Montage", "join_clips", { paths }, { verb: "Joining" });
+  runJob("合并", "join_clips", { paths }, { verb: "合并中" });
 };
 
 listen("thumb", (e) => {
@@ -351,14 +351,14 @@ function setPlayIcon() {
 }
 
 function drawShare() {
-  $("#p-share span").textContent = cur?.share_url ? "Copy link" : "Share";
-  $("#p-share").title = cur?.share_url ? "Copy this clip's link" : "Upload the selection and copy a link";
+  $("#p-share span").textContent = cur?.share_url ? "复制链接" : "分享";
+  $("#p-share").title = cur?.share_url ? "复制该片段链接" : "上传选中区域并生成链接";
 }
 
 function drawFavorite() {
   drawShare();
   $("#p-fav").classList.toggle("on", !!cur?.favorite);
-  $("#p-fav").title = cur?.favorite ? "Remove from favourites (F)" : "Add to favourites (F)";
+  $("#p-fav").title = cur?.favorite ? "取消收藏 (F)" : "加入收藏 (F)";
 }
 
 function openPlayer(c) {
@@ -409,7 +409,7 @@ function drawTimeline() {
   $("#p-time").textContent = fmtTime(now);
   $("#p-dur").textContent = fmtTime(d);
   const full = trim.start < 0.05 && trim.end > d - 0.05;
-  $("#p-range").textContent = full ? "Drag the red handles to trim" : `Selection ${fmtTime(trim.start)} – ${fmtTime(trim.end)} · ${fmtTime(trim.end - trim.start)}`;
+  $("#p-range").textContent = full ? "拖动红色手柄裁剪片段" : `选区 ${fmtTime(trim.start)} – ${fmtTime(trim.end)} · ${fmtTime(trim.end - trim.start)}`;
   if (typeof updateExportHint === "function") updateExportHint();
 }
 
@@ -586,11 +586,11 @@ async function linkReady(c, url) {
   try {
     await copyText(url);
   } catch (e) {
-    return toast(`Couldn't copy the link: ${e}`, { error: true });
+    return toast(`链接复制失败：${e}`, { error: true });
   }
-  toast("Link copied. It works for 14 days.", {
+  toast("链接已复制，有效期14天。", {
     action: {
-      label: "Remove",
+      label: "移除",
       run: async () => {
         try {
           await invoke("unshare_clip", { path: c.path });
@@ -598,9 +598,9 @@ async function linkReady(c, url) {
           const listed = clips.find((x) => x.path === c.path);
           if (listed) listed.share_url = null;
           drawShare();
-          toast("Link removed");
+          toast("链接已移除");
         } catch (e) {
-          toast(`Couldn't remove it: ${e}`, { error: true });
+          toast(`移除失败：${e}`, { error: true });
         }
       },
     },
@@ -608,8 +608,8 @@ async function linkReady(c, url) {
 }
 function startShare() {
   const c = cur;
-  runJob("Share", "share_clip", { path: c.path, start: trim.start, end: trim.end, title: c.name, game: c.game }, {
-    verb: "Preparing",
+  runJob("分享", "share_clip", { path: c.path, start: trim.start, end: trim.end, title: c.name, game: c.game }, {
+    verb: "准备中",
     done: (url) => {
       c.share_url = url;
       const listed = clips.find((x) => x.path === c.path);
@@ -639,14 +639,14 @@ $("#share-yes").onclick = () => {
 };
 
 $("#p-delete").onclick = async () => {
-  if (!cur || !confirm(`Move "${cur.name}" to the Recycle Bin?`)) return;
+  if (!cur || !confirm(`确定把「${cur.name}」移到回收站？`)) return;
   const path = cur.path;
   show("clips");
   try {
     await invoke("delete_clip", { path });
-    toast("Moved to the Recycle Bin");
+    toast("已移至回收站");
   } catch (e) {
-    toast(`Couldn't delete: ${e}`, { error: true });
+    toast(`删除失败：${e}`, { error: true });
   }
   loadClips();
 };
@@ -669,7 +669,7 @@ async function commitRename() {
     cur.name = name;
     loadClips();
   } catch (e) {
-    toast(`Couldn't rename: ${e}`, { error: true });
+    toast(`重命名失败：${e}`, { error: true });
     $("#p-title").value = cur.name;
   }
   video.src = convertFileSrc(cur.path);
@@ -697,12 +697,12 @@ async function runJob(label, cmd, args, { verb = null, done = null } = {}) {
     const out = await invoke(cmd, args);
     if (done) await done(out);
     else {
-      toast(`${label} saved`);
+      toast(`${label} 已保存`);
       loadClips(out);
     }
   } catch (e) {
-    if (String(e) === "Cancelled") toast(`${label} cancelled`);
-    else toast(`${label} failed: ${e}`, { error: true });
+    if (String(e) === "Cancelled") toast(`${label} 已取消`);
+    else toast(`${label} 失败：${e}`, { error: true });
   }
   busy = false;
   jobVerb = null;
@@ -710,21 +710,21 @@ async function runJob(label, cmd, args, { verb = null, done = null } = {}) {
 }
 let jobVerb = null;
 listen("progress", (e) => {
-  if (e.payload.job === "update") return toast(`Downloading update… ${Math.round(e.payload.pct * 100)}%`, { progress: e.payload.pct, sticky: true });
-  if (e.payload.job === "upload") return toast("Uploading…", { sticky: true });
-  if (busy && !cancelling) toast(`${jobVerb || (e.payload.job === "export" ? "Exporting" : "Trimming")}… ${Math.round(e.payload.pct * 100)}%`, { progress: e.payload.pct, sticky: true, cancel: true });
+  if (e.payload.job === "update") return toast(`下载更新… ${Math.round(e.payload.pct * 100)}%`, { progress: e.payload.pct, sticky: true });
+  if (e.payload.job === "upload") return toast("上传中…", { sticky: true });
+  if (busy && !cancelling) toast(`${jobVerb || (e.payload.job === "export" ? "导出中" : "裁剪中")}… ${Math.round(e.payload.pct * 100)}%`, { progress: e.payload.pct, sticky: true, cancel: true });
 });
 let cancelling = false;
 $("#toast-cancel").onclick = async () => {
   cancelling = true;
   $("#toast-cancel").disabled = true;
-  $("#toast-text").textContent = "Cancelling…";
+  $("#toast-text").textContent = "正在取消…";
   await invoke("cancel_job").catch(() => {});
   cancelling = false;
   $("#toast-cancel").disabled = false;
 };
 
-$("#p-trim").onclick = () => runJob("Selection", "trim_clip", { path: cur.path, start: trim.start, end: trim.end, exact: $("#p-exact").checked, toExports: false });
+$("#p-trim").onclick = () => runJob("选区", "trim_clip", { path: cur.path, start: trim.start, end: trim.end, exact: $("#p-exact").checked, toExports: false });
 /* Export presets. Limits as of October 2026: Discord free 20 MB (raised from
  * 10 MB in August 2026), Nitro Basic 50 MB, Nitro 1 GB; WhatsApp 16 MB for
  * regular video; email 25 MB, of which encoding leaves about 18 MB for the
@@ -734,9 +734,9 @@ const PRESETS = {
   "nitro-basic": { mb: 50, file: "Nitro Basic" },
   nitro: { mb: 1000, file: "Nitro" },
   whatsapp: { mb: 16, file: "WhatsApp" },
-  email: { mb: 18, file: "Email" },
+  email: { mb: 18, file: "邮件" },
   x: { mb: 500, file: "X", maxDur: 140 },
-  hq: { mb: null, file: "Export" },
+  hq: { mb: null, file: "导出" },
   custom: { mb: null, file: null },
 };
 
@@ -756,7 +756,7 @@ function exportPlan() {
   const dur = Math.max(0.1, trim.end - trim.start);
   const srcH = video.videoHeight || 1080;
   const srcFps = Math.min(status?.fps || 60, 60);
-  if (p.mb == null) return { text: `${Math.min(srcH, 2160)}p ${srcFps} fps, high quality` };
+  if (p.mb == null) return { text: `${Math.min(srcH, 2160)}p ${srcFps} fps，高质量` };
   const av1 = $("#p-codec").value === "av1";
   const aspect = $("#p-vertical").checked ? 9 / 16 : 16 / 9;
   const total = (p.mb * 8000 * 0.95) / dur;
@@ -769,7 +769,7 @@ function exportPlan() {
     const h = Math.min(h0, srcH), f = Math.min(f0, srcFps);
     if ((vid * 1000) / (h * aspect * h * f) >= minBpp) { pick = [h, f]; break; }
   }
-  const warn = p.maxDur && dur > p.maxDur ? `Over ${fmtTime(p.maxDur, false)}: trim it first` : null;
+  const warn = p.maxDur && dur > p.maxDur ? `超过 ${fmtTime(p.maxDur, false)}：请先裁剪` : null;
   return { text: warn || `${pick[0]}p ${pick[1]} fps`, warn: !!warn, tiny: pick[0] < 540 };
 }
 
@@ -780,7 +780,7 @@ function updateExportHint() {
   const hint = $("#p-export-hint");
   hint.textContent = plan.text;
   hint.className = "sub" + (plan.warn ? " warn" : "");
-  hint.title = plan.tiny ? "The selection is long for this size limit. A shorter selection looks sharper." : "";
+  hint.title = plan.tiny ? "这个选区时长超出容量限制，更短的片段会更清晰。" : "";
   $("#p-export").disabled = busy || !!plan.warn;
 }
 for (const id of ["#p-preset", "#p-codec", "#p-custom-mb", "#p-vertical"]) {
@@ -804,16 +804,16 @@ video.addEventListener("loadedmetadata", updateExportHint);
 $("#p-export").onclick = () => {
   const p = presetTarget();
   const vertical = $("#p-vertical").checked;
-  runJob("Export", "export_clip", {
+  runJob("导出", "export_clip", {
     path: cur.path,
     start: trim.start,
     end: trim.end,
     targetMb: p.mb,
     codec: $("#p-codec").value,
-    label: vertical ? `${p.file} Vertical` : p.file,
+    label: vertical ? `${p.file} 竖屏` : p.file,
     vertical,
   }, {
-    done: (out) => toast("Export saved to the Exports folder", { action: { label: "Show", run: () => invoke("show_in_folder", { path: out }) } }),
+    done: (out) => toast("已导出到导出文件夹", { action: { label: "打开", run: () => invoke("show_in_folder", { path: out }) } }),
   });
 };
 
@@ -821,15 +821,15 @@ $("#p-export").onclick = () => {
  * Uses the preset from Settings, and always H.264 so it plays wherever it lands. */
 const copied = new Map(); // Copying the same thing twice doesn't encode twice.
 async function copyClip(path, start, end, whole) {
-  if (busy) return toast("Wait for the current job to finish");
+  if (busy) return toast("请等待当前任务完成");
   const id = settings.copy_preset;
   const p = PRESETS[id];
-  if (p?.maxDur && end - start > p.maxDur) return toast(`Over ${fmtTime(p.maxDur, false)} for ${p.file}: trim it first`, { error: true });
-  const target = p && id !== "hq" ? ` for ${p.file}` : "";
+  if (p?.maxDur && end - start > p.maxDur) return toast(`超出 ${fmtTime(p.maxDur, false)} 时长限制：请先裁剪`, { error: true });
+  const target = p && id !== "hq" ? `（适配 ${p.file}）` : "";
   const finish = async (file) => {
     await invoke("copy_file", { path: file });
     copied.set(key, file);
-    toast(`Copied${target}. Paste it anywhere.`);
+    toast(`已复制${target}，直接粘贴即可。`);
   };
   const key = [path, start, end, id].join("|");
   try {
@@ -837,12 +837,12 @@ async function copyClip(path, start, end, whole) {
     if (copied.has(key)) return await finish(copied.get(key));
   } catch (e) {
     copied.delete(key);
-    if (!p && whole) return toast(`Copy failed: ${e}`, { error: true });
+    if (!p && whole) return toast(`复制失败：${e}`, { error: true });
   }
   const job = p
     ? ["export_clip", { path, start, end, targetMb: p.mb, codec: "h264", label: p.file }]
     : ["trim_clip", { path, start, end, exact: false, toExports: true }];
-  runJob("Copy", ...job, { verb: `Preparing${target}`, done: finish });
+  runJob("复制", ...job, { verb: `准备中${target}`, done: finish });
 }
 function copyCurrent() {
   if (!cur) return;
@@ -897,15 +897,15 @@ const form = $("#settings");
 const FIELDS = ["monitor", "max_height", "fps", "quality", "codec", "capture_method", "check_updates", "copy_preset", "buffer_secs", "quick_secs", "storage_limit_gb", "auto_cs2", "auto_dota2", "auto_lol", "auto_deaths", "save_sound", "save_overlay", "desktop_audio", "microphone", "start_with_windows", "desktop_mode", "output_device", "input_device", "separate_tracks"];
 const NUMERIC = ["fps", "max_height", "buffer_secs", "quick_secs", "storage_limit_gb"];
 const QUALITY = {
-  balanced: "Smaller files. Fine for most games.",
-  high: "Hard to tell apart from the original.",
-  max: "Highest bitrate. Large files.",
+  balanced: "文件更小，大部分游戏够用。",
+  high: "肉眼几乎看不出和原画面差别。",
+  max: "最高码率，文件体积很大。",
 };
 
 const CAPTURE = {
-  auto: "Desktop Duplication, or Windows Graphics Capture if that isn't available.",
-  dxgi: "Works on every setup. Fullscreen games keep their mouse cursor.",
-  wgc: "Can hide the mouse cursor in OpenGL and Vulkan fullscreen games like Minecraft.",
+  auto: "优先桌面复制，不可用时使用Windows图形捕获。",
+  dxgi: "兼容性最好，全屏游戏可以保留鼠标光标。",
+  wgc: "OpenGL、Vulkan全屏游戏可隐藏鼠标光标（例如Minecraft）。",
 };
 
 function fillSettings() {
@@ -916,7 +916,7 @@ function fillSettings() {
     if (field.type === "checkbox") field.checked = !!v;
     else field.value = v == null ? "" : String(v);
   }
-  document.querySelectorAll("[data-hotkey]").forEach((b) => (b.textContent = settings[b.dataset.hotkey] || "Set key"));
+  document.querySelectorAll("[data-hotkey]").forEach((b) => (b.textContent = settings[b.dataset.hotkey] || "设置按键"));
   $("#save-key").textContent = settings.hotkey;
   $("#empty-key").textContent = settings.hotkey;
   $("#empty-secs").textContent = settings.buffer_secs;
@@ -925,8 +925,8 @@ function fillSettings() {
   $("#quality-desc").textContent = QUALITY[settings.quality] || "";
   $("#capture-desc").textContent = CAPTURE[settings.capture_method] || "";
   $("#copy-desc").textContent = settings.copy_preset === "original"
-    ? "Copies the file as recorded. Instant, but it may be too big to send."
-    : "Encodes a copy to fit first, which can take a minute. It's saved in the Exports folder.";
+    ? "直接复制原始录制文件，瞬间完成，但文件可能过大无法发送。"
+    : "先编码压缩适配大小，耗时稍久，文件保存到导出文件夹。";
   memHint();
   fillAudio();
 }
@@ -939,13 +939,13 @@ function fillDeviceSelect(sel, devices, current, label) {
   sel.replaceChildren(el("option", null, label));
   sel.firstChild.value = "";
   for (const d of devices) {
-    const o = el("option", null, d.name || "Unnamed device");
+    const o = el("option", null, d.name || "未命名设备");
     o.value = d.id;
     sel.append(o);
   }
   // A saved device that's unplugged right now still shows, so it isn't lost.
   if (current && !devices.some((d) => d.id === current)) {
-    const o = el("option", null, "Saved device (not connected)");
+    const o = el("option", null, "已保存设备（当前未连接）");
     o.value = current;
     sel.append(o);
   }
@@ -963,19 +963,19 @@ function fillAudio() {
     multi: (desk ? (apps ? Math.max(1, settings.audio_apps.length) : 1) : 0) + (settings.microphone ? 1 : 0) > 1,
   };
   document.querySelectorAll("[data-show]").forEach((r) => (r.hidden = !show[r.dataset.show]));
-  $("#mode-desc").textContent = apps ? "Just the apps below, e.g. the game without Discord or music." : "Everything you hear on the output device.";
-  fillDeviceSelect($("#output-device"), outputDevices, settings.output_device, "Windows default");
-  fillDeviceSelect($("#input-device"), inputDevices, settings.input_device, "Windows default");
+  $("#mode-desc").textContent = apps ? "仅录制下方选定程序，例如只录游戏，不录Discord、音乐。" : "录制输出设备上所有听到的声音。";
+  fillDeviceSelect($("#output-device"), outputDevices, settings.output_device, "Windows默认");
+  fillDeviceSelect($("#input-device"), inputDevices, settings.input_device, "Windows默认");
 
   const list = $("#app-list");
   list.replaceChildren();
-  if (!settings.audio_apps.length) list.append(el("span", "app-empty", "No apps yet. Until you add one, everything is recorded."));
+  if (!settings.audio_apps.length) list.append(el("span", "app-empty", "暂无应用。添加前，会录制全部声音。"));
   for (const a of settings.audio_apps) {
     const chip = el("span", "app-chip");
     chip.title = a.exe;
     const x = el("button", null, "✕");
     x.type = "button";
-    x.title = `Stop recording ${a.name}`;
+    x.title = `停止录制 ${a.name}`;
     x.onclick = () => pushSettings({ ...settings, audio_apps: settings.audio_apps.filter((b) => b.exe !== a.exe) });
     chip.append(el("span", null, a.name), x);
     list.append(chip);
@@ -994,7 +994,7 @@ async function loadAudioDevices() {
 async function refreshAudioApps() {
   const sel = $("#add-app");
   const apps = await invoke("audio_apps").catch(() => []);
-  sel.replaceChildren(el("option", null, apps.length ? "Add an app…" : "Nothing is playing audio right now"));
+  sel.replaceChildren(el("option", null, apps.length ? "添加应用…" : "当前没有程序正在播放音频"));
   sel.firstChild.value = "";
   for (const a of apps) {
     if (settings.audio_apps.some((b) => b.exe.toLowerCase() === a.exe.toLowerCase())) continue;
@@ -1027,7 +1027,7 @@ function memHint() {
   const bpp = { balanced: 0.06, high: 0.1, max: 0.16 }[settings.quality];
   const kbps = Math.min(Math.max((w * h * settings.fps * bpp) / 1000, 8000), 300000);
   const mb = (kbps * settings.buffer_secs) / 8 / 1000;
-  $("#mem-hint").textContent = `Kept in memory, at most ${mb < 1000 ? Math.round(mb) + " MB" : (mb / 1000).toFixed(1) + " GB"} with these settings.`;
+  $("#mem-hint").textContent = `保存在内存中，当前设置下最多占用 ${mb < 1000 ? Math.round(mb) + " MB" : (mb / 1000).toFixed(1) + " GB"}。`;
 }
 
 let savedTimer;
@@ -1038,17 +1038,17 @@ async function pushSettings(next) {
   const s = $("#saved");
   try {
     await invoke("set_settings", { settings: next });
-    s.textContent = "Saved";
+    s.textContent = "已保存";
     s.className = "sub ok";
   } catch (e) {
     settings = prev;
     fillSettings();
-    s.textContent = `Couldn't apply: ${e}`;
+    s.textContent = `应用失败：${e}`;
     s.className = "sub error";
   }
   clearTimeout(savedTimer);
   savedTimer = setTimeout(() => {
-    s.textContent = "Changes apply immediately";
+    s.textContent = "修改即时生效";
     s.className = "sub";
   }, 2500);
   refreshStatus();
@@ -1078,32 +1078,32 @@ $("#open-logs").onclick = () => invoke("open_logs");
 /* ---------- updates ---------- */
 async function checkUpdate(manual) {
   const line = $("#update-status");
-  if (manual) line.textContent = "Checking…";
+  if (manual) line.textContent = "正在检查…";
   let update;
   try {
     update = await invoke("check_update");
   } catch (e) {
-    if (manual) line.textContent = `Couldn't check: ${e}`;
+    if (manual) line.textContent = `检查失败：${e}`;
     return;
   }
   if (!update) {
-    if (manual) line.textContent = "You're on the latest version.";
+    if (manual) line.textContent = "已经是最新版本。";
     return;
   }
-  line.textContent = `Version ${update.version} is available.`;
-  $("#update-title").textContent = `Update to ${update.version}`;
+  line.textContent = `新版本 ${update.version} 可用。`;
+  $("#update-title").textContent = `更新到 ${update.version}`;
   $("#update-banner").hidden = false;
-  $("#update-check").textContent = "Update";
+  $("#update-check").textContent = "更新";
   $("#update-check").onclick = installUpdate;
 }
 async function installUpdate() {
   $("#update-banner").disabled = true;
   $("#update-check").disabled = true;
-  toast("Downloading update…", { progress: 0, sticky: true });
+  toast("下载更新…", { progress: 0, sticky: true });
   try {
     await invoke("install_update"); // The installer closes this window.
   } catch (e) {
-    toast(`Update failed: ${e}`, { error: true });
+    toast(`更新失败：${e}`, { error: true });
     $("#update-banner").disabled = false;
     $("#update-check").disabled = false;
   }
@@ -1119,18 +1119,18 @@ async function openReport() {
   reportData = null;
   $("#report-text").value = "";
   $("#report-result").textContent = "";
-  $("#report-preview").textContent = "Collecting…";
-  $("#report-send").textContent = "Send";
+  $("#report-preview").textContent = "收集中…";
+  $("#report-send").textContent = "发送";
   $("#report-send").hidden = false;
   $("#report-send").disabled = true;
-  $("#report-cancel").textContent = "Cancel";
+  $("#report-cancel").textContent = "取消";
   d.showModal();
   try {
     reportData = await invoke("report_preview");
     $("#report-preview").textContent = JSON.stringify(reportData, null, 2);
     $("#report-send").disabled = false;
   } catch (e) {
-    $("#report-result").textContent = `Couldn't collect system details: ${e}`;
+    $("#report-result").textContent = `收集系统信息失败：${e}`;
   }
 }
 $("#report-open").onclick = openReport;
@@ -1140,16 +1140,16 @@ $("#report-form").addEventListener("submit", async (e) => {
   const send = $("#report-send");
   const result = $("#report-result");
   send.disabled = true;
-  send.textContent = "Sending…";
+  send.textContent = "发送中…";
   result.textContent = "";
   try {
     const id = await invoke("send_report", { report: reportData, description: $("#report-text").value, contact: $("#report-contact").value });
-    result.textContent = `Sent, thank you. Your reference is ${id}.`;
+    result.textContent = `提交成功，感谢反馈，编号：${id}`;
     send.hidden = true;
-    $("#report-cancel").textContent = "Close";
+    $("#report-cancel").textContent = "关闭";
   } catch (err) {
-    result.textContent = `Couldn't send: ${err}`;
-    send.textContent = "Try again";
+    result.textContent = `发送失败：${err}`;
+    send.textContent = "重试";
     send.disabled = false;
   }
 });
@@ -1184,13 +1184,13 @@ document.querySelectorAll("[data-hotkey]").forEach((b) => b.addEventListener("cl
   const field = b.dataset.hotkey;
   const clearable = "clearable" in b.dataset;
   b.classList.add("listening");
-  b.textContent = clearable && settings[field] ? "Press a key, or Delete to clear" : "Press a key…";
+  b.textContent = clearable && settings[field] ? "按下按键，按Delete清空" : "按下按键…";
   const done = (value) => {
     window.removeEventListener("keydown", onKey, true);
     window.removeEventListener("mousedown", onMouse, true);
     b.classList.remove("listening");
     if (value != null && value !== settings[field]) pushSettings({ ...settings, [field]: value });
-    else b.textContent = settings[field] || "Set key";
+    else b.textContent = settings[field] || "设置按键";
   };
   const onKey = (e) => {
     e.preventDefault();
@@ -1222,7 +1222,7 @@ document.querySelectorAll("[data-hotkey]").forEach((b) => b.addEventListener("cl
   }
   monitors = await invoke("monitors");
   const sel = $("#monitor");
-  sel.replaceChildren(el("option", null, "Primary display"));
+  sel.replaceChildren(el("option", null, "主显示器"));
   sel.firstChild.value = "";
   for (const m of monitors) {
     const o = el("option", null, m.label);
