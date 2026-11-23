@@ -22,4 +22,4 @@ debug = 1
 
 # ========== 下面新增的patch ==========
 [patch.crates-io]
-ffmpeg-sys-next = { git = "https://github.com/你的用户名/ffmpeg-sys-next.git" }
+ffmpeg-sys-next = { git = "https://github.com/LeonThePro2012/ffmpeg-sys-next.git" }
