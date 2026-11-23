@@ -1,6 +1,6 @@
 name: 打包Highlight
 on:
-  workflow_dispatch: # 支持手动点按钮启动编译
+  workflow_dispatch:
 
 jobs:
   build-windows:
@@ -8,6 +8,9 @@ jobs:
     steps:
       - name: 拉取源码
         uses: actions/checkout@v4
+
+      - name: 安装 NASM（ffmpeg编译/链接必须）
+        run: choco install nasm -y
 
       - name: 安装 Node.js
         uses: actions/setup-node@v4
@@ -26,6 +29,9 @@ jobs:
 
       - name: Tauri打包
         working-directory: ./app
+        env:
+          # 关键：告诉ffmpeg-sys-next去哪里找vendor里的ffmpeg
+          FFMPEG_VENDOR_PATH: ${{ github.workspace }}/vendor/ffmpeg
         run: npm run tauri build -- --no-sign
 
       - name: 上传打包产物
