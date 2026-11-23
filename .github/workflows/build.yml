@@ -9,23 +9,37 @@ jobs:
       - name: 拉取源码
         uses: actions/checkout@v4
 
+      # 【新增：提前清理vendor目录，防止它走本地链接分支】
+      - name: 清理vendor/ffmpeg
+        run: |
+          if (Test-Path vendor/ffmpeg) {
+            Remove-Item -Recurse -Force vendor/ffmpeg
+          }
+
+      # 【关键！提前预编译Rust依赖，ffmpeg在这里就开始构建，早失败】
+      - name: 安装Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust缓存加速
+        uses: swatinem/rust-cache@v2
+
+      - name: 预校验Rust代码（触发ffmpeg-sys-next编译）
+        working-directory: ./app
+        run: cargo check
+
+      # 上面cargo check成功，才往下走前端、打包
       - name: 安装 Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
 
-      - name: 安装 Rust
-        uses: dtolnay/rust-toolchain@stable
-      - name: Rust缓存加速
-        uses: swatinem/rust-cache@v2
-
       - name: 进入app目录，安装前端依赖
-        working-directory: ./app
+        working-directory: /app
         run: npm ci
 
       - name: Tauri打包
-        working-directory: ./app
+        working-directory: /app
         run: npm run tauri build -- --no-sign
 
       - name: 上传打包产物
