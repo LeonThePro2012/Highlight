@@ -7,58 +7,41 @@ concurrency:
 
 jobs:
   build-windows:
-    runs-on: windows-latest
-    env:
-      FFMPEG_SYS_NEXT_DEBUG: "1"
-      RUST_BACKTRACE: "1"
+    runs-on: ubuntu-latest
     steps:
-      - name: 拉取源码
+      - name: 检出代码
         uses: actions/checkout@v4
 
-      - name: Setup MSYS2 UCRT64
-        uses: msys2/setup-msys2@v2
+      - name: 安装 cross
+        uses: taiki-e/install-action@cross
+
+      - name: 缓存编译产物
+        uses: actions/cache@v4
         with:
-          msystem: UCRT64
-          update: true
-          install: >-
-            nasm
-            make
-            pkgconf
+          path: ~/.target
+          key: cross-${{ hashFiles('Cargo.toml','Cargo.lock') }}
 
-      - name: 清理vendor/ffmpeg
-        run: |
-          if (Test-Path vendor/ffmpeg) {
-            Remove-Item -Recurse -Force vendor/ffmpeg
-          }
-
-      - name: 安装Rust + GNU目标
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: x86_64-pc-windows-gnu
-
-      - name: Rust缓存加速
-        uses: swatinem/rust-cache@v2
-
-      - name: 预校验Rust代码（触发ffmpeg-sys-next编译）
-        working-directory: ./app
-        run: cargo check --target x86_64-pc-windows-gnu
-
-      - name: 安装 Node.js
+      - name: 安装 Node 22
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
+          cache-dependency-path: app/package-lock.json
 
-      - name: 进入app目录，安装前端依赖
+      - name: 前端依赖
         working-directory: ./app
         run: npm ci
 
-      - name: Tauri打包 GNU
+      - name: cross 编译 release
         working-directory: ./app
-        run: npm run tauri build -- --target x86_64-pc-windows-gnu --no-sign
+        run: cross build --target x86_64-pc-windows-gnu --release
+        env:
+          # 不需要签名，这两行注释保留不动即可
+          # TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
+          # TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
 
       - name: 上传打包产物
         uses: actions/upload-artifact@v4
         with:
-          name: Highlight-打包结果-GNU
-          path: app/src-tauri/target/x86_64-pc-windows-gnu/release/bundle/**/*
+          name: Highlight-Windows-GNU
+          path: app/src-tauri/target/x86_64-pc-windows-gnu/release/bundle/**
