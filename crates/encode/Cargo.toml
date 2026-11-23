@@ -1,5 +1,5 @@
 [package]
-name = "hindsight-encode"
+name = "highlight-encode"
 version.workspace = true
 edition.workspace = true
 license-file.workspace = true
@@ -8,7 +8,7 @@ license-file.workspace = true
 anyhow.workspace = true
 serde.workspace = true
 ffmpeg-sys-next.workspace = true
-hindsight-capture = { path = "../capture" }
+highlight-capture = { path = "../capture" }
 windows = { workspace = true, features = [
     "Win32_Foundation",
     "Win32_Graphics_Direct3D11",
