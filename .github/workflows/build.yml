@@ -9,8 +9,11 @@ jobs:
       - name: 拉取源码
         uses: actions/checkout@v4
 
-      - name: 安装 NASM + YASM（编译FFmpeg源码必须）
-        run: choco install nasm yasm -y
+      - name: 安装 vcpkg
+        uses: microsoft/vcpkg-action@v1
+        with:
+          packages: ffmpeg
+          triplet: x64-windows
 
       - name: 安装 Node.js
         uses: actions/setup-node@v4
@@ -27,11 +30,10 @@ jobs:
         working-directory: ./app
         run: npm ci
 
-      - name: Tauri打包（开启ffmpeg源码编译）
+      - name: Tauri打包
         working-directory: ./app
         env:
-          # 不使用vendor，让ffmpeg-sys-next自己编译ffmpeg
-          FFMPEG_BUILD: true
+          VCPKG_ROOT: ${{ github.workspace }}/vcpkg
         run: npm run tauri build -- --no-sign
 
       - name: 上传打包产物
