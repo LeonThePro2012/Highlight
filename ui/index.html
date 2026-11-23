@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -36,18 +36,18 @@
     </div>
 
     <nav class="nav">
-      <button class="nav-item active" data-view="clips"><svg class="ic"><use href="#i-film"/></svg><span>Clips</span><span class="count" id="nav-count"></span></button>
+      <button class="nav-item active" data-view="clips"><svg class="ic"><use href="#i-film"/></svg><span>片段</span><span class="count" id="nav-count"></span></button>
       <div class="games" id="games"></div>
-      <button class="nav-item" data-view="settings"><svg class="ic"><use href="#i-gear"/></svg><span>Settings</span></button>
+      <button class="nav-item" data-view="settings"><svg class="ic"><use href="#i-gear"/></svg><span>设置</span></button>
     </nav>
 
-    <button class="update" id="update-banner" hidden><b id="update-title"></b><span>Restarts Hindsight</span></button>
+    <button class="update" id="update-banner" hidden><b id="update-title"></b><span>重启 Hindsight</span></button>
 
     <section class="rec" id="rec">
-      <div class="rec-state"><span class="dot"></span><span id="rec-state">Starting</span></div>
+      <div class="rec-state"><span class="dot"></span><span id="rec-state">启动中</span></div>
       <dl class="rec-meta" id="rec-meta"></dl>
-      <button class="btn primary block" id="save-clip">Save clip<kbd id="save-key">F8</kbd></button>
-      <button class="btn block" id="toggle-rec">Pause recording</button>
+      <button class="btn primary block" id="save-clip">保存片段<kbd id="save-key">F8</kbd></button>
+      <button class="btn block" id="toggle-rec">暂停录制</button>
     </section>
     <footer class="credit">&copy; 2026 <a href="#" data-url="https://github.com/TheOriUHD">TheOriUHD</a></footer>
   </aside>
@@ -56,33 +56,33 @@
     <!-- Library -->
     <section id="view-clips" class="view active">
       <header class="head">
-        <h1 id="clips-title">All clips</h1>
+        <h1 id="clips-title">全部片段</h1>
         <span class="sub" id="clip-count"></span>
         <div class="spacer"></div>
         <button class="btn primary" id="join-go" hidden></button>
-        <button class="btn" id="join">Join clips</button>
-        <button class="btn" id="open-folder"><svg class="ic"><use href="#i-folder"/></svg>Open folder</button>
+        <button class="btn" id="join">合并片段</button>
+        <button class="btn" id="open-folder"><svg class="ic"><use href="#i-folder"/></svg>打开文件夹</button>
       </header>
       <div class="days" id="days"></div>
       <div class="empty" id="empty" hidden>
-        <h2>No clips yet</h2>
-        <p>Hindsight keeps the last <b id="empty-secs">60</b> seconds of your screen.<br />Press <kbd id="empty-key">F8</kbd> in a game to save them here.</p>
+        <h2>暂无片段</h2>
+        <p>Hindsight 会保留最近 <b id="empty-secs">60</b> 秒的屏幕画面。<br />在游戏里按下 <kbd id="empty-key">F8</kbd> 保存到这里。</p>
       </div>
     </section>
 
     <!-- Player -->
     <section id="view-player" class="view player">
       <header class="head">
-        <button class="icon-btn" id="p-back" title="Back to clips (Esc)"><svg class="ic"><use href="#i-back"/></svg></button>
-        <input class="title-edit" id="p-title" spellcheck="false" title="Click to rename" />
+        <button class="icon-btn" id="p-back" title="返回片段列表 (Esc)"><svg class="ic"><use href="#i-back"/></svg></button>
+        <input class="title-edit" id="p-title" spellcheck="false" title="点击重命名" />
         <span class="sub" id="p-meta"></span>
         <div class="spacer"></div>
-        <button class="btn primary" id="p-share"><svg class="ic"><use href="#i-link"/></svg><span>Share</span></button>
-        <button class="icon-btn" id="p-fav" title="Favourite (F)"><svg class="ic"><use href="#i-star"/></svg></button>
-        <button class="icon-btn" id="p-copy" title="Copy to clipboard (Ctrl+C)"><svg class="ic"><use href="#i-copy"/></svg></button>
-        <button class="icon-btn" id="p-external" title="Open in default player"><svg class="ic"><use href="#i-external"/></svg></button>
-        <button class="icon-btn" id="p-folder" title="Show in folder"><svg class="ic"><use href="#i-folder"/></svg></button>
-        <button class="icon-btn danger" id="p-delete" title="Move to Recycle Bin"><svg class="ic"><use href="#i-trash"/></svg></button>
+        <button class="btn primary" id="p-share"><svg class="ic"><use href="#i-link"/></svg><span>分享</span></button>
+        <button class="icon-btn" id="p-fav" title="收藏 (F)"><svg class="ic"><use href="#i-star"/></svg></button>
+        <button class="icon-btn" id="p-copy" title="复制到剪贴板 (Ctrl+C)"><svg class="ic"><use href="#i-copy"/></svg></button>
+        <button class="icon-btn" id="p-external" title="用默认播放器打开"><svg class="ic"><use href="#i-external"/></svg></button>
+        <button class="icon-btn" id="p-folder" title="在文件夹中显示"><svg class="ic"><use href="#i-folder"/></svg></button>
+        <button class="icon-btn danger" id="p-delete" title="移到回收站"><svg class="ic"><use href="#i-trash"/></svg></button>
       </header>
 
       <div class="stage">
@@ -90,22 +90,22 @@
           <video id="video" preload="auto"></video>
           <video id="scrub" class="scrub" preload="auto" muted></video>
           <div class="video-error" id="video-error" hidden>
-            <p>This clip's codec can't be previewed here.</p>
-            <button class="btn" id="p-external2">Open in default player</button>
+            <p>该片段的编码无法在此预览。</p>
+            <button class="btn" id="p-external2">用默认播放器打开</button>
           </div>
         </div>
       </div>
 
       <div class="transport">
-        <button class="icon-btn play" id="p-play" title="Play / pause (Space)"><svg class="ic"><use href="#i-play"/></svg></button>
+        <button class="icon-btn play" id="p-play" title="播放 / 暂停 (空格)"><svg class="ic"><use href="#i-play"/></svg></button>
         <span class="clock"><span id="p-time">0:00.0</span><span class="of"> / <span id="p-dur">0:00.0</span></span></span>
         <div class="track" id="track">
           <div class="strip" id="strip"></div>
           <div class="shade" id="shade-l"></div>
           <div class="shade" id="shade-r"></div>
           <div class="sel" id="sel"></div>
-          <div class="handle start" id="h-start" title="In point (I)"></div>
-          <div class="handle end" id="h-end" title="Out point (O)"></div>
+          <div class="handle start" id="h-start" title="入点 (I)"></div>
+          <div class="handle end" id="h-end" title="出点 (O)"></div>
           <div class="playhead" id="playhead"></div>
         </div>
       </div>
@@ -113,59 +113,59 @@
       <div class="edit-bar">
         <span class="sub" id="p-range"></span>
         <div class="spacer"></div>
-        <label class="check" title="Re-encodes so the cut lands on the exact frame. Off: instant, cuts at the nearest keyframe."><input type="checkbox" id="p-exact" /><span></span>Frame-accurate</label>
-        <button class="btn" id="p-trim"><svg class="ic"><use href="#i-cut"/></svg>Save selection</button>
+        <label class="check" title="重新编码，让裁剪精准到帧。关闭：瞬时裁剪，在最近关键帧切割。"><input type="checkbox" id="p-exact" /><span></span>精准帧裁剪</label>
+        <button class="btn" id="p-trim"><svg class="ic"><use href="#i-cut"/></svg>保存选中区域</button>
         <div class="export">
           <span class="sub" id="p-export-hint"></span>
-          <input type="number" id="p-custom-mb" min="1" max="100000" step="1" value="100" title="Size limit in MB" hidden />
-          <select id="p-preset" title="Where it's going">
+          <input type="number" id="p-custom-mb" min="1" max="100000" step="1" value="100" title="文件大小上限（MB）" hidden />
+          <select id="p-preset" title="适配平台">
             <optgroup label="Discord">
               <option value="discord">Discord · 20 MB</option>
               <option value="nitro-basic">Nitro Basic · 50 MB</option>
               <option value="nitro">Nitro · 1 GB</option>
             </optgroup>
-            <optgroup label="Messaging and email">
+            <optgroup label="聊天与邮件">
               <option value="whatsapp">WhatsApp · 16 MB</option>
-              <option value="email">Email attachment · 25 MB</option>
+              <option value="email">邮件附件 · 25 MB</option>
             </optgroup>
-            <optgroup label="Social">
+            <optgroup label="社交平台">
               <option value="x">X / Twitter · 512 MB</option>
             </optgroup>
-            <optgroup label="Other">
-              <option value="hq">High quality, no limit</option>
-              <option value="custom">Custom size</option>
+            <optgroup label="其他">
+              <option value="hq">高质量，无大小限制</option>
+              <option value="custom">自定义大小</option>
             </optgroup>
           </select>
-          <select id="p-codec" title="H.264 plays everywhere. AV1 looks much better at the same size but needs a recent phone or PC to play.">
+          <select id="p-codec" title="H.264 兼容性最好。AV1 在同等体积下画质更好，但需要较新的电脑或手机才能播放。">
             <option value="h264">H.264</option>
             <option value="av1">AV1</option>
           </select>
-          <label class="check" title="Crops the middle of the frame to 9:16 for TikTok, Shorts and Reels."><input type="checkbox" id="p-vertical" /><span></span>Vertical</label>
-          <button class="btn primary" id="p-export"><svg class="ic"><use href="#i-export"/></svg>Export</button>
+          <label class="check" title="裁成中间区域，适配 9:16 的抖音、短视频。"><input type="checkbox" id="p-vertical" /><span></span>竖屏</label>
+          <button class="btn primary" id="p-export"><svg class="ic"><use href="#i-export"/></svg>导出</button>
         </div>
       </div>
-      <p class="keys"><kbd>Space</kbd> play <kbd>I</kbd><kbd>O</kbd> in / out <kbd>←</kbd><kbd>→</kbd> seek <kbd>Ctrl</kbd><kbd>C</kbd> copy <kbd>Esc</kbd> back</p>
+      <p class="keys"><kbd>空格</kbd>播放 <kbd>I</kbd><kbd>O</kbd>入点/出点 <kbd>←</kbd><kbd>→</kbd>跳转 <kbd>Ctrl</kbd><kbd>C</kbd>复制 <kbd>Esc</kbd>返回</p>
     </section>
 
     <!-- Settings -->
     <section id="view-settings" class="view">
       <header class="head">
-        <h1>Settings</h1>
-        <span class="sub" id="saved">Changes apply immediately</span>
+        <h1>设置</h1>
+        <span class="sub" id="saved">修改即时生效</span>
       </header>
       <form id="settings" class="settings" autocomplete="off">
-        <h2>Capture</h2>
+        <h2>捕获</h2>
         <div class="group">
-          <div class="row"><div class="lbl">Display<small>The screen that gets recorded.</small></div><select name="monitor" id="monitor"></select></div>
-          <div class="row"><div class="lbl">Resolution<small>Downscaling saves space and encoder time.</small></div>
+          <div class="row"><div class="lbl">显示器<small>要录制的屏幕。</small></div><select name="monitor" id="monitor"></select></div>
+          <div class="row"><div class="lbl">分辨率<small>降低分辨率节省空间，减轻编码压力。</small></div>
             <div class="seg">
-              <label><input type="radio" name="max_height" value="0" /><span>Native</span></label>
+              <label><input type="radio" name="max_height" value="0" /><span>原始</span></label>
               <label><input type="radio" name="max_height" value="1440" /><span>1440p</span></label>
               <label><input type="radio" name="max_height" value="1080" /><span>1080p</span></label>
               <label><input type="radio" name="max_height" value="720" /><span>720p</span></label>
             </div>
           </div>
-          <div class="row"><div class="lbl">Frame rate</div>
+          <div class="row"><div class="lbl">帧率</div>
             <div class="seg">
               <label><input type="radio" name="fps" value="30" /><span>30</span></label>
               <label><input type="radio" name="fps" value="60" /><span>60</span></label>
@@ -175,112 +175,112 @@
               <label><input type="radio" name="fps" value="240" /><span>240</span></label>
             </div>
           </div>
-          <div class="row"><div class="lbl">Quality<small id="quality-desc"></small></div>
+          <div class="row"><div class="lbl">画质<small id="quality-desc"></small></div>
             <div class="seg">
-              <label><input type="radio" name="quality" value="balanced" /><span>Balanced</span></label>
-              <label><input type="radio" name="quality" value="high" /><span>High</span></label>
-              <label><input type="radio" name="quality" value="max" /><span>Max</span></label>
+              <label><input type="radio" name="quality" value="balanced" /><span>均衡</span></label>
+              <label><input type="radio" name="quality" value="high" /><span>高</span></label>
+              <label><input type="radio" name="quality" value="max" /><span>最高</span></label>
             </div>
           </div>
-          <div class="row"><div class="lbl">Codec<small>Auto picks the best your GPU supports: AV1, then HEVC, then H.264.</small></div>
+          <div class="row"><div class="lbl">编码<small>自动选择显卡支持的最优编码：AV1，其次 HEVC，再是 H.264。</small></div>
             <select name="codec">
-              <option value="auto">Auto</option>
+              <option value="auto">自动</option>
               <option value="av1">AV1</option>
               <option value="hevc">HEVC</option>
               <option value="h264">H.264</option>
             </select>
           </div>
-          <div class="row"><div class="lbl">Capture method<small id="capture-desc"></small></div>
+          <div class="row"><div class="lbl">捕获方式<small id="capture-desc"></small></div>
             <select name="capture_method">
-              <option value="auto">Automatic</option>
-              <option value="dxgi">Desktop Duplication</option>
-              <option value="wgc">Windows Graphics Capture</option>
+              <option value="auto">自动</option>
+              <option value="dxgi">桌面复制（DXGI）</option>
+              <option value="wgc">Windows 图形捕获（WGC）</option>
             </select>
           </div>
         </div>
 
-        <h2>Replay</h2>
+        <h2>回放缓存</h2>
         <div class="group">
-          <div class="row"><div class="lbl">Clip length<small id="mem-hint"></small></div>
+          <div class="row"><div class="lbl">片段时长<small id="mem-hint"></small></div>
             <select name="buffer_secs">
-              <option value="15">15 seconds</option>
-              <option value="30">30 seconds</option>
-              <option value="45">45 seconds</option>
-              <option value="60">1 minute</option>
-              <option value="90">90 seconds</option>
-              <option value="120">2 minutes</option>
-              <option value="180">3 minutes</option>
-              <option value="300">5 minutes</option>
+              <option value="15">15 秒</option>
+              <option value="30">30 秒</option>
+              <option value="45">45 秒</option>
+              <option value="60">1 分钟</option>
+              <option value="90">90 秒</option>
+              <option value="120">2 分钟</option>
+              <option value="180">3 分钟</option>
+              <option value="300">5 分钟</option>
             </select>
           </div>
-          <div class="row"><div class="lbl">Save clip<small>Keyboard combo or a mouse side button. Works in fullscreen games.</small></div><button type="button" class="btn hotkey" data-hotkey="hotkey" id="hotkey">F8</button></div>
-          <div class="row"><div class="lbl">Quick save<small>A second key that saves a shorter clip.</small></div>
+          <div class="row"><div class="lbl">保存片段快捷键<small>组合键或鼠标侧键，全屏游戏下可用。</small></div><button type="button" class="btn hotkey" data-hotkey="hotkey" id="hotkey">F8</button></div>
+          <div class="row"><div class="lbl">快速保存<small>第二个快捷键，保存更短的片段。</small></div>
             <select name="quick_secs">
-              <option value="5">5 seconds</option>
-              <option value="10">10 seconds</option>
-              <option value="15">15 seconds</option>
-              <option value="20">20 seconds</option>
-              <option value="30">30 seconds</option>
-              <option value="45">45 seconds</option>
+              <option value="5">5 秒</option>
+              <option value="10">10 秒</option>
+              <option value="15">15 秒</option>
+              <option value="20">20 秒</option>
+              <option value="30">30 秒</option>
+              <option value="45">45 秒</option>
             </select>
             <button type="button" class="btn hotkey" data-hotkey="quick_hotkey" data-clearable></button>
           </div>
-          <div class="row"><div class="lbl">Pause or resume<small>Stop recording without opening anything.</small></div><button type="button" class="btn hotkey" data-hotkey="pause_hotkey" data-clearable></button></div>
-          <label class="row toggle"><div class="lbl">Sound on save</div><input type="checkbox" name="save_sound" /><i></i></label>
-          <label class="row toggle"><div class="lbl">Popup on save<small>Slides in from the screen edge. Not visible in exclusive fullscreen.</small></div><input type="checkbox" name="save_overlay" /><i></i></label>
+          <div class="row"><div class="lbl">暂停/继续录制<small>停止录制，不用打开任何窗口。</small></div><button type="button" class="btn hotkey" data-hotkey="pause_hotkey" data-clearable></button></div>
+          <label class="row toggle"><div class="lbl">保存时提示音</div><input type="checkbox" name="save_sound" /><i></i></label>
+          <label class="row toggle"><div class="lbl">保存弹窗<small>从屏幕边缘滑入。独占全屏模式下不可见。</small></div><input type="checkbox" name="save_overlay" /><i></i></label>
         </div>
 
-        <h2>Auto clips</h2>
+        <h2>自动截取</h2>
         <div class="group">
-          <label class="row toggle"><div class="lbl">Counter-Strike 2<small>Uses Valve's official game events. Adds a small config file to the game's folder; restart CS2 after turning this on.</small></div><input type="checkbox" name="auto_cs2" /><i></i></label>
-          <label class="row toggle"><div class="lbl">Dota 2<small>Uses Valve's official game events. Adds a small config file to the game's folder; restart Dota 2 after turning this on.</small></div><input type="checkbox" name="auto_dota2" /><i></i></label>
-          <label class="row toggle"><div class="lbl">League of Legends<small>Uses Riot's Live Client Data API, which League runs on this PC during a game.</small></div><input type="checkbox" name="auto_lol" /><i></i></label>
-          <label class="row toggle"><div class="lbl">Clip my deaths too</div><input type="checkbox" name="auto_deaths" /><i></i></label>
+          <label class="row toggle"><div class="lbl">CS2 反恐精英2<small>使用 Valve 官方游戏事件；会在游戏目录写入配置文件，开启后重启游戏。</small></div><input type="checkbox" name="auto_cs2" /><i></i></label>
+          <label class="row toggle"><div class="lbl">Dota 2<small>使用 Valve 官方游戏事件；会在游戏目录写入配置文件，开启后重启游戏。</small></div><input type="checkbox" name="auto_dota2" /><i></i></label>
+          <label class="row toggle"><div class="lbl">英雄联盟<small>依靠游戏运行时的 Riot 客户端数据接口。</small></div><input type="checkbox" name="auto_lol" /><i></i></label>
+          <label class="row toggle"><div class="lbl">阵亡时也自动截取</div><input type="checkbox" name="auto_deaths" /><i></i></label>
         </div>
 
-        <h2>Sharing</h2>
+        <h2>分享</h2>
         <div class="group">
-          <div class="row"><div class="lbl">Copy to clipboard<small id="copy-desc"></small></div>
+          <div class="row"><div class="lbl">复制到剪贴板预设<small id="copy-desc"></small></div>
             <select name="copy_preset">
-              <option value="original">Original file</option>
+              <option value="original">原始文件</option>
               <option value="discord">Discord · 20 MB</option>
               <option value="nitro-basic">Nitro Basic · 50 MB</option>
               <option value="nitro">Nitro · 1 GB</option>
               <option value="whatsapp">WhatsApp · 16 MB</option>
-              <option value="email">Email attachment · 25 MB</option>
+              <option value="email">邮件附件 · 25 MB</option>
               <option value="x">X / Twitter · 512 MB</option>
-              <option value="hq">High quality, no limit</option>
+              <option value="hq">高质量，无大小限制</option>
             </select>
           </div>
         </div>
 
-        <h2>Audio</h2>
+        <h2>音频</h2>
         <div class="group">
-          <label class="row toggle"><div class="lbl">Game and desktop audio</div><input type="checkbox" name="desktop_audio" /><i></i></label>
-          <div class="row sub-row" data-show="desktop"><div class="lbl">Record<small id="mode-desc"></small></div>
+          <label class="row toggle"><div class="lbl">游戏和桌面音频</div><input type="checkbox" name="desktop_audio" /><i></i></label>
+          <div class="row sub-row" data-show="desktop"><div class="lbl">录制模式<small id="mode-desc"></small></div>
             <div class="seg">
-              <label><input type="radio" name="desktop_mode" value="all" /><span>Everything</span></label>
-              <label><input type="radio" name="desktop_mode" value="apps" /><span>Selected apps</span></label>
+              <label><input type="radio" name="desktop_mode" value="all" /><span>全部声音</span></label>
+              <label><input type="radio" name="desktop_mode" value="apps" /><span>指定应用</span></label>
             </div>
           </div>
-          <div class="row sub-row" data-show="desktop-all"><div class="lbl">Output device<small>Loopback of what plays on this device.</small></div><select name="output_device" id="output-device"></select></div>
+          <div class="row sub-row" data-show="desktop-all"><div class="lbl">输出设备<small>抓取该设备正在播放的声音。</small></div><select name="output_device" id="output-device"></select></div>
           <div class="row sub-row apps-row" data-show="desktop-apps">
-            <div class="lbl">Apps<small>Only these apps are recorded, each with what it spawns. Apps that aren't running yet are picked up when they start.</small>
+            <div class="lbl">应用列表<small>仅录制选中的程序，包含它衍生的子进程；未启动的程序会在启动后自动捕获。</small>
               <div class="app-list" id="app-list"></div>
             </div>
-            <select id="add-app"><option value="">Add an app…</option></select>
+            <select id="add-app"><option value="">添加应用…</option></select>
           </div>
-          <label class="row toggle"><div class="lbl">Microphone</div><input type="checkbox" name="microphone" /><i></i></label>
-          <div class="row sub-row" data-show="mic"><div class="lbl">Input device</div><select name="input_device" id="input-device"></select></div>
-          <label class="row toggle" data-show="multi"><div class="lbl">Separate tracks<small>Besides the mixed track, keep each source on its own track for editing.</small></div><input type="checkbox" name="separate_tracks" /><i></i></label>
+          <label class="row toggle"><div class="lbl">麦克风</div><input type="checkbox" name="microphone" /><i></i></label>
+          <div class="row sub-row" data-show="mic"><div class="lbl">输入设备</div><select name="input_device" id="input-device"></select></div>
+          <label class="row toggle" data-show="multi"><div class="lbl">分离音轨<small>除混合音轨外，每个声源单独一条音轨，方便后期剪辑。</small></div><input type="checkbox" name="separate_tracks" /><i></i></label>
         </div>
 
-        <h2>Storage</h2>
+        <h2>存储</h2>
         <div class="group">
-          <div class="row"><div class="lbl">Clips folder<small class="path" id="out-dir"></small></div><button type="button" class="btn" id="pick-dir">Change</button></div>
-          <div class="row"><div class="lbl">Storage limit<small>Above this, the oldest clips go to the Recycle Bin. Favourites are never removed.</small></div>
+          <div class="row"><div class="lbl">片段文件夹<small class="path" id="out-dir"></small></div><button type="button" class="btn" id="pick-dir">更改</button></div>
+          <div class="row"><div class="lbl">存储上限<small>超出上限后，最旧片段移入回收站；收藏的片段不会被自动清理。</small></div>
             <select name="storage_limit_gb">
-              <option value="0">No limit</option>
+              <option value="0">无限制</option>
               <option value="10">10 GB</option>
               <option value="25">25 GB</option>
               <option value="50">50 GB</option>
@@ -289,28 +289,28 @@
               <option value="500">500 GB</option>
             </select>
           </div>
-          <label class="row toggle"><div class="lbl">Start with Windows<small>Starts quietly in the tray.</small></div><input type="checkbox" name="start_with_windows" /><i></i></label>
+          <label class="row toggle"><div class="lbl">随 Windows 启动<small>静默后台托盘运行。</small></div><input type="checkbox" name="start_with_windows" /><i></i></label>
         </div>
 
-        <h2>About</h2>
+        <h2>关于</h2>
         <div class="group">
           <div class="row"><div class="lbl">Hindsight <span id="version"></span>
-              <small>&copy; 2026 <a href="#" data-url="https://github.com/TheOriUHD">TheOriUHD</a>. No accounts. Clips stay on your PC unless you press Share.</small>
+              <small>&copy; 2026 <a href="#" data-url="https://github.com/TheOriUHD">TheOriUHD</a>。无需账号，除非你手动分享，片段只保存在本机。</small>
             </div>
             <button type="button" class="btn" data-url="https://github.com/TheOriUHD/hindsight">GitHub</button>
-            <button type="button" class="btn" data-url="https://hindsighthq.app">Website</button>
+            <button type="button" class="btn" data-url="https://hindsighthq.app">官网</button>
           </div>
-          <div class="row"><div class="lbl">License<small>Free for personal and other noncommercial use (PolyForm Noncommercial 1.0.0). Video encoding by FFmpeg under the LGPL 2.1.</small></div>
-            <button type="button" class="btn" data-url="https://github.com/TheOriUHD/hindsight/blob/main/LICENSE">License</button>
+          <div class="row"><div class="lbl">许可证<small>仅限个人非商用（PolyForm Noncommercial 1.0.0）。视频编码使用 FFmpeg，遵循 LGPL 2.1。</small></div>
+            <button type="button" class="btn" data-url="https://github.com/TheOriUHD/hindsight/blob/main/LICENSE">许可协议</button>
           </div>
-          <div class="row"><div class="lbl">Updates<small id="update-status">Asks hindsighthq.app for the latest version.</small></div><button type="button" class="btn" id="update-check">Check now</button></div>
-          <label class="row toggle"><div class="lbl">Check for updates automatically<small>Never installs anything without your click.</small></div><input type="checkbox" name="check_updates" /><i></i></label>
-          <div class="row"><div class="lbl">Report a problem<small>Sends a description, system details and logs. You can read all of it first.</small></div><button type="button" class="btn" id="report-open">Report a problem</button></div>
-          <div class="row"><div class="lbl">Legal<small>Operator details and how Hindsight handles data (in German).</small></div>
-            <button type="button" class="btn" data-url="https://hindsighthq.app/impressum">Impressum</button>
-            <button type="button" class="btn" data-url="https://hindsighthq.app/datenschutz">Privacy</button>
+          <div class="row"><div class="lbl">更新<small id="update-status">向 hindsighthq.app 查询最新版本。</small></div><button type="button" class="btn" id="update-check">立即检查</button></div>
+          <label class="row toggle"><div class="lbl">自动检查更新<small>不会不经你确认自动安装。</small></div><input type="checkbox" name="check_updates" /><i></i></label>
+          <div class="row"><div class="lbl">问题反馈<small>提交描述、系统信息和日志，你可以先预览内容。</small></div><button type="button" class="btn" id="report-open">提交反馈</button></div>
+          <div class="row"><div class="lbl">法律信息<small>运营主体和隐私说明（德语页面）。</small></div>
+            <button type="button" class="btn" data-url="https://hindsighthq.app/impressum">法律声明</button>
+            <button type="button" class="btn" data-url="https://hindsighthq.app/datenschutz">隐私政策</button>
           </div>
-          <div class="row"><div class="lbl">Logs<small>Stored on this PC. They only leave it in a report you send.</small></div><button type="button" class="btn" id="open-logs">Open logs</button></div>
+          <div class="row"><div class="lbl">日志<small>保存在本机，只有你主动提交反馈时才会上传。</small></div><button type="button" class="btn" id="open-logs">打开日志文件夹</button></div>
         </div>
       </form>
     </section>
@@ -318,40 +318,40 @@
 
   <dialog class="report" id="report">
     <form method="dialog" id="report-form">
-      <h2>Report a problem</h2>
-      <label>What happened?
-        <textarea id="report-text" rows="5" maxlength="10000" placeholder="What you were doing, what you expected, what happened instead." required></textarea>
+      <h2>反馈问题</h2>
+      <label>发生了什么？
+        <textarea id="report-text" rows="5" maxlength="10000" placeholder="你正在做什么、预期效果、实际发生的问题。" required></textarea>
       </label>
-      <label>Contact <small>Optional, if you'd like a reply. Discord or email.</small>
+      <label>联系方式 <small>选填，方便回复你。Discord 或邮箱。</small>
         <input id="report-contact" maxlength="200" spellcheck="false" />
       </label>
       <details id="report-details">
-        <summary>What gets sent</summary>
-        <p class="sub">Windows version, CPU, RAM, GPUs and drivers, displays, audio devices, your settings, recorder status, capture and overlay apps that are running, Hindsight crash records and logs. Your user name, clip names and clip paths are removed.</p>
-        <pre id="report-preview">Collecting…</pre>
+        <summary>提交内容包含</summary>
+        <p class="sub">Windows版本、CPU、内存、显卡与驱动、显示器、音频设备、你的设置、录制状态、后台捕获类软件、崩溃记录和日志。用户名、片段名称、文件路径会被剔除。</p>
+        <pre id="report-preview">收集中…</pre>
       </details>
       <p class="sub" id="report-result"></p>
       <div class="report-foot">
-        <button type="button" class="btn" id="report-cancel">Cancel</button>
-        <button type="submit" class="btn primary" id="report-send" disabled>Send</button>
+        <button type="button" class="btn" id="report-cancel">取消</button>
+        <button type="submit" class="btn primary" id="report-send" disabled>发送</button>
       </div>
     </form>
   </dialog>
 
   <dialog class="report" id="share-ok">
     <form method="dialog">
-      <h2>Share this clip?</h2>
-      <p class="sub">Hindsight uploads the selection and gives you a link. Anyone with the link can watch it, react to it and download it. It's deleted after 14 days, and you can remove it sooner.</p>
-      <p class="sub">Only share clips you have the right to share. <a href="#" data-url="https://clips.hindsighthq.app/terms">Read the terms</a></p>
+      <h2>分享这个片段？</h2>
+      <p class="sub">Hindsight 将上传选中片段并生成链接。拿到链接的人都可以查看、互动、下载。文件14天后自动删除，你也可以手动提前移除。</p>
+      <p class="sub">仅分享你拥有版权的内容。<a href="#" data-url="https://clips.hindsighthq.app/terms">查看条款</a></p>
       <div class="report-foot">
-        <button type="button" class="btn" id="share-no">Cancel</button>
-        <button type="button" class="btn primary" id="share-yes">Upload and copy link</button>
+        <button type="button" class="btn" id="share-no">取消</button>
+        <button type="button" class="btn primary" id="share-yes">上传并复制链接</button>
       </div>
     </form>
   </dialog>
 
   <div class="toast" id="toast" hidden>
-    <div class="toast-row"><span id="toast-text"></span><button class="btn small-btn" id="toast-action" hidden></button><button class="btn small-btn" id="toast-cancel" hidden>Cancel</button></div>
+    <div class="toast-row"><span id="toast-text"></span><button class="btn small-btn" id="toast-action" hidden></button><button class="btn small-btn" id="toast-cancel" hidden>取消</button></div>
     <div class="bar"><i id="toast-bar"></i></div>
   </div>
 
